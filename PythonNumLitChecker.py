@@ -1,5 +1,3 @@
-import re
-
 class NFA:
     def __init__(self, states, alphabet, transitions, start_state, accept_states):
         '''
@@ -222,8 +220,8 @@ def test_file_cases(nfa_instance, in_file, ans_file, out_file):
     Get strings from test file and puts through NFA
 
     :param nfa_instance: 
-    :param in_file:
-    :param ans_file:
+    :param in_file: input file
+    :param ans_file: expected answer file
     :param out_file:
     '''
     try:
