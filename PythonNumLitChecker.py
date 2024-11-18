@@ -1,5 +1,3 @@
-import re
-
 class NFA:
     def __init__(self, states, alphabet, transitions, start_state, accept_states):
         
@@ -10,10 +8,12 @@ class NFA:
         self.accept_states = accept_states
         self.current_state = start_state
 
-    def reset(self):
-        self.current_state = self.start_state
-
     def transition(self, char):
+        '''
+        Transition from one 
+        
+        :param char: 
+        '''
         if (self.current_state, char) in self.transitions:
             self.current_state = self.transitions[(self.current_state, char)]
         else:
@@ -23,7 +23,7 @@ class NFA:
         return self.current_state in self.accept_states
 
     def process_input(self, input_string):
-        self.reset()
+        self.current_state = self.start_state   # reset current state to start state
         for char in input_string:
             if self.current_state is None:
                 return False
@@ -32,6 +32,11 @@ class NFA:
 
 states = {"q0", "q1", "q2", "q3", "q5", "q6", "q7"}
 alphabet = set("0123456789_")
+# strings of digits for transitions
+digits = "0123456789"
+octal_digits = "01234567"
+hex_digits = digits + "abcdefABCDEF"
+
 transitions = {
     # Q0 TRANSITIONS (DEC, OCT, HEX)
     ("q0", "0"): "q3", # OCT and HEX must start with 0
@@ -268,3 +273,21 @@ def test_user_input(nfa_instance):
             break
         result = "accepted" if is_valid_string(user_input, nfa_instance) else "rejected"
         print(f"'{user_input}' -> {result}")
+
+
+def main():
+    while True:
+        choice = input("\nRecognize Python Decimal Integer!\nPlease choose test input: \n(1) User Input Strings \n(2) Test File of Inputs \n(3) Exit\n").strip()
+
+        if choice == '1':
+            test_user_input(nfa)
+        elif choice == '2':
+            test_file_cases(nfa, file_path, "in_ans.txt", "out.txt")
+        elif choice == '3':
+            print("\nProgram exited.")
+            break
+        else:
+            print("\nInvalid choice. Please enter '1', '2', or '3'")
+ans_file = "in_ans.txt"
+file_path = "in.txt"
+main()
