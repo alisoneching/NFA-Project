@@ -50,165 +50,60 @@ class NFA:
 
 states = {"q0", "q1", "q2", "q3", "q5", "q6", "q7"}
 alphabet = set("0123456789_abcdefABCDEF")
-transitions = {
-    # Q0 TRANSITIONS (DEC, OCT, HEX)
-    ("q0", "0"): "q3", # OCT and HEX must start with 0
-    ("q0", "1"): "q1",
-    ("q0", "2"): "q1",
-    ("q0", "3"): "q1",
-    ("q0", "4"): "q1",
-    ("q0", "5"): "q1",
-    ("q0", "6"): "q1",
-    ("q0", "7"): "q1",
-    ("q0", "8"): "q1",
-    ("q0", "9"): "q1",
+transitions = {}
 
-    # Q1 TRANSITIONS (DEC)
-    ("q1", "0"): "q1",
-    ("q1", "1"): "q1",
-    ("q1", "2"): "q1",
-    ("q1", "3"): "q1",
-    ("q1", "4"): "q1",
-    ("q1", "5"): "q1",
-    ("q1", "6"): "q1",
-    ("q1", "7"): "q1",
-    ("q1", "8"): "q1",
-    ("q1", "9"): "q1",
-    ("q1", "_"): "q2",
+# Q0 TRANSITIONS (DEC, OCT, HEX)
+transitions[("q0", "0")] = "q3"  # OCT and HEX must start with 0
+for char in "123456789":
+    transitions[("q0", char)] = "q1"
 
-    # Q2 TRANSITIONS (DEC)
-    ("q2", "0"): "q1",
-    ("q2", "1"): "q1",
-    ("q2", "2"): "q1",
-    ("q2", "3"): "q1",
-    ("q2", "4"): "q1",
-    ("q2", "5"): "q1",
-    ("q2", "6"): "q1",
-    ("q2", "7"): "q1",
-    ("q2", "8"): "q1",
-    ("q2", "9"): "q1",
+# Q1 TRANSITIONS (DEC)
+for char in "0123456789":
+    transitions[("q1", char)] = "q1"
+transitions[("q1", "_")] = "q2"
 
-    # Q3 TRANSITIONS (DEC, OCT, HEX)
-    # DEC
-    ("q3", "0"): "q3",
-    ("q3", "_"): "q4",
-    # OCT
-    ("q3", "o"): "q5",
-    ("q3", "O"): "q5",
-    # HEX
-    ("q3", "x"): "q8",
-    ("q3", "X"): "q8",
+# Q2 TRANSITIONS (DEC)
+for char in "0123456789":
+    transitions[("q2", char)] = "q1"
 
-    # Q4 TRANSITIONS (DEC)
-    ("q4", "0"): "q3",
+# Q3 TRANSITIONS (DEC, OCT, HEX)
+transitions[("q3", "0")] = "q3"
+transitions[("q3", "_")] = "q4"
+for char in "oO":
+    transitions[("q3", char)] = "q5"
+for char in "xX":
+    transitions[("q3", char)] = "q8"
 
-    # Q5 TRANSITIONS (OCT)
-    ("q5", "_"): "q7",
-    ("q5", "0"): "q6",
-    ("q5", "1"): "q6",
-    ("q5", "2"): "q6",
-    ("q5", "3"): "q6",
-    ("q5", "4"): "q6",
-    ("q5", "5"): "q6",
-    ("q5", "6"): "q6",
-    ("q5", "7"): "q6",
+# Q4 TRANSITIONS (DEC)
+transitions[("q4", "0")] = "q3"
 
-    # Q6 TRANSITIONS (OCT)
-    ("q6", "0"): "q6",
-    ("q6", "1"): "q6",
-    ("q6", "2"): "q6",
-    ("q6", "3"): "q6",
-    ("q6", "4"): "q6",
-    ("q6", "5"): "q6",
-    ("q6", "6"): "q6",
-    ("q6", "7"): "q6",
-    ("q6", "_"): "q7",
+# Q5 TRANSITIONS (OCT)
+transitions[("q5", "_")] = "q7"
+for char in "01234567":
+    transitions[("q5", char)] = "q6"
 
-    # Q7 TRANSITIONS (OCT)
-    ("q7", "0"): "q6",
-    ("q7", "1"): "q6",
-    ("q7", "2"): "q6",
-    ("q7", "3"): "q6",
-    ("q7", "4"): "q6",
-    ("q7", "5"): "q6",
-    ("q7", "6"): "q6",
-    ("q7", "7"): "q6",
+# Q6 TRANSITIONS (OCT)
+for char in "01234567":
+    transitions[("q6", char)] = "q6"
+transitions[("q6", "_")] = "q7"
 
-    # Q8 TRANSITIONS (HEX)
-    ("q8", "_"): "q10",
-    ("q8", "0"): "q9",
-    ("q8", "1"): "q9",
-    ("q8", "2"): "q9",
-    ("q8", "3"): "q9",
-    ("q8", "4"): "q9",
-    ("q8", "5"): "q9",
-    ("q8", "6"): "q9",
-    ("q8", "7"): "q9",
-    ("q8", "8"): "q9",
-    ("q8", "9"): "q9",
-    ("q8", "a"): "q9",
-    ("q8", "b"): "q9",
-    ("q8", "c"): "q9",
-    ("q8", "d"): "q9",
-    ("q8", "e"): "q9",
-    ("q8", "f"): "q9",
-    ("q8", "A"): "q9",
-    ("q8", "B"): "q9",
-    ("q8", "C"): "q9",
-    ("q8", "D"): "q9",
-    ("q8", "E"): "q9",
-    ("q8", "F"): "q9",
+# Q7 TRANSITIONS (OCT)
+for char in "01234567":
+    transitions[("q7", char)] = "q6"
 
-    # Q9 TRANSITIONS (HEX)
-    ("q9", "0"): "q9",
-    ("q9", "1"): "q9",
-    ("q9", "2"): "q9",
-    ("q9", "3"): "q9",
-    ("q9", "4"): "q9",
-    ("q9", "5"): "q9",
-    ("q9", "6"): "q9",
-    ("q9", "7"): "q9",
-    ("q9", "8"): "q9",
-    ("q9", "9"): "q9",
-    ("q9", "a"): "q9",
-    ("q9", "b"): "q9",
-    ("q9", "c"): "q9",
-    ("q9", "d"): "q9",
-    ("q9", "e"): "q9",
-    ("q9", "f"): "q9",
-    ("q9", "A"): "q9",
-    ("q9", "B"): "q9",
-    ("q9", "C"): "q9",
-    ("q9", "D"): "q9",
-    ("q9", "E"): "q9",
-    ("q9", "F"): "q9",
-    ("q9", "_"): "q10",
+# Q8 TRANSITIONS (HEX)
+transitions[("q8", "_")] = "q10"
+for char in "0123456789abcdefABCDEF":
+    transitions[("q8", char)] = "q9"
 
-    # Q10 TRANSITIONS (HEX)
-    ("q10", "0"): "q9",
-    ("q10", "1"): "q9",
-    ("q10", "2"): "q9",
-    ("q10", "3"): "q9",
-    ("q10", "4"): "q9",
-    ("q10", "5"): "q9",
-    ("q10", "6"): "q9",
-    ("q10", "7"): "q9",
-    ("q10", "8"): "q9",
-    ("q10", "9"): "q9",
-    ("q10", "a"): "q9",
-    ("q10", "b"): "q9",
-    ("q10", "c"): "q9",
-    ("q10", "d"): "q9",
-    ("q10", "e"): "q9",
-    ("q10", "f"): "q9",
-    ("q10", "A"): "q9",
-    ("q10", "B"): "q9",
-    ("q10", "C"): "q9",
-    ("q10", "D"): "q9",
-    ("q10", "E"): "q9",
-    ("q10", "F"): "q9",
+# Q9 TRANSITIONS (HEX)
+for char in "0123456789abcdefABCDEF":
+    transitions[("q9", char)] = "q9"
+transitions[("q9", "_")] = "q10"
 
-}
+# Q10 TRANSITIONS (HEX)
+for char in "0123456789abcdefABCDEF":
+    transitions[("q10", char)] = "q9"
 
 start_state = "q0"
 accept_states = {"q1", "q3", "q6", "q9"}
