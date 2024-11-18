@@ -1,6 +1,13 @@
 class NFA:
     def __init__(self, states, alphabet, transitions, start_state, accept_states):
-        
+        '''
+        Constructor to initialize the attributes for the NFA
+
+        :param states: finite set of states
+        :param alphabet: set of input symbols
+        :param transitions: dictionary of transition functions for each state to next set of states
+        :param start_state: the start/initial state of machine
+        :param accept_states: the set of accepting/final states'''
         self.states = states
         self.alphabet = alphabet
         self.transitions = transitions
@@ -8,20 +15,33 @@ class NFA:
         self.accept_states = accept_states
         self.current_state = start_state
 
-    def reset(self):
-        self.current_state = self.start_state
-
     def transition(self, char):
+        '''
+        Take in a character to transition to the next states
+        
+        :param char: the character input to transition to next states
+        '''
         if (self.current_state, char) in self.transitions:
             self.current_state = self.transitions[(self.current_state, char)]
         else:
             self.current_state = None
 
     def is_accepting(self):
+        '''
+        Check if the current state is an accept state
+        
+        :return: bool True whether current state is in accept state and False if not
+        '''
         return self.current_state in self.accept_states
 
     def process_input(self, input_string):
-        self.reset()
+        '''
+        Process input string for NFA to transition to next states
+
+        :param input_string: the input string to be tested in language or not
+        :return: bool whether or not NFA is accepting
+        '''
+        self.current_state = self.start_state   # reset the current state to the start state
         for char in input_string:
             if self.current_state is None:
                 return False
