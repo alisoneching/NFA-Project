@@ -1,3 +1,5 @@
+import re
+
 class NFA:
     def __init__(self, states, alphabet, transitions, start_state, accept_states):
         '''
@@ -49,7 +51,7 @@ class NFA:
         return self.is_accepting()
 
 states = {"q0", "q1", "q2", "q3", "q5", "q6", "q7"}
-alphabet = set("0123456789_")
+alphabet = set("0123456789_abcdefABCDEF")
 transitions = {
     # Q0 TRANSITIONS (DEC, OCT, HEX)
     ("q0", "0"): "q3", # OCT and HEX must start with 0
