@@ -219,10 +219,10 @@ def test_file_cases(nfa_instance, in_file, ans_file, out_file):
     '''
     Get strings from test file and puts through NFA
 
-    :param nfa_instance: 
-    :param in_file: input file
-    :param ans_file: expected answer file
-    :param out_file:
+    :param nfa_instance: created NFA to run with
+    :param in_file: input file path
+    :param ans_file: expected answer file path
+    :param out_file: output file path
     '''
     try:
         # read input file test cases
@@ -268,7 +268,6 @@ def test_file_cases(nfa_instance, in_file, ans_file, out_file):
         with open(out_file, "w") as output_file:
             output_file.write("\n".join(comparisons))
 
-        print(f"Comparisons ")
         print("\nGoing back to menu...")
     except FileNotFoundError:
         print(f"Error: File not found.")
