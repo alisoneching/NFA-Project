@@ -167,3 +167,74 @@ accept_states = {"q1", "q3", "q7", "q10"}
 
 nfa = NFA(states, alphabet, transitions, start_state, accept_states)
 
+# is_valid_string() method: returns boolean, TRUE if in an accept
+#                           state, FALSE if not
+
+def is_valid_string(input_string, nfa_instance):
+    return nfa_instance.process_input(input_string)
+
+# test_file_cases() method: gets strings from the test file as input
+#                           and puts them through the NFA
+
+def test_file_cases(nfa_instance, input_file_path, ans_file_path, output_file_path):
+    try:
+        # read input file test cases
+        with open(input_file_path, "r") as input_file:
+            test_cases = input_file.readlines()
+
+        # read the input file expected answers
+        with open(ans_file_path, "r") as answer_file:
+            expected_answers = [line.strip() for line in answer_file.readlines()]
+
+        actual_output = [] # so we can compare to the expected output
+        comparisons = [] # this array will be written to the out.txt file
+
+        print("-----------------------------")
+        print("\nExpected Output (from 'in_ans.txt'):")
+        for line in expected_answers:
+            print(line)
+
+        print("\nRunning test cases from file...\n")
+        print("-----------------------------")
+        print("\nActual Output (with 'in.txt' as an input):")
+        for test_string in test_cases:
+            test_string = test_string.strip()
+            if test_string:
+                result = "accepted" if is_valid_string(test_string, nfa_instance) else "rejected"
+                actual_line = f"'{test_string}' -> {result}"
+                actual_output.append(actual_line)
+        
+        # prints acutal output in a nice format
+        for actual in actual_output:
+            print(actual)
+
+        # compare the output of the nfa to the expected output ("in_ans.txt")
+        print("-----------------------------")
+        print(f"\nComparisons written to '{output_file_path}':")
+        for i, (actual, expected) in enumerate(zip(actual_output, expected_answers), start=1):
+            if actual == expected:
+                comparison = f"{actual} PASS"
+            else:
+                comparison = f"{actual} FAIL"
+            comparisons.append(comparison)
+
+        with open(output_file_path, "w") as output_file:
+            output_file.write("\n".join(comparisons))
+
+        print(f"Comparisons ")
+        print("\nGoing back to menu...")
+    except FileNotFoundError:
+        print(f"Error: File not found.")
+
+# test_user_input() method: gets strings from the user and puts
+#                           them through the NFA
+
+def test_user_input(nfa_instance):
+    print("Enter strings to test (type 'exit' to exit):")
+    while True:
+        user_input = input("Enter a string: ").strip()
+        if user_input.lower() == 'exit':
+            print("\nGoing back to menu...")
+            break
+        result = "accepted" if is_valid_string(user_input, nfa_instance) else "rejected"
+        print(f"'{user_input}' -> {result}")
