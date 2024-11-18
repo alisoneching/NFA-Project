@@ -7,6 +7,7 @@ Members: Alison Ching - github: @alisoneching
 Contents:
 1. Python-Numerical_Literal-NFA.jff - JFLAP file of NFA that recognizes decimal integers, octal integers, and hexadecimal integers
 2. PythonNumLitChecker.py - main code with NFA implementation
+3. nl.jpg - jpg image of the NFA
 
 How to Use Code:
 1. Run the code.
